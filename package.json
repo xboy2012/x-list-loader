@@ -1,0 +1,23 @@
+{
+  "name": "x-list-loader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --outDir temp/es"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xboy2012/x-list-loader.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xboy2012/x-list-loader/issues"
+  },
+  "homepage": "https://github.com/xboy2012/x-list-loader#readme",
+  "devDependencies": {
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  }
+}

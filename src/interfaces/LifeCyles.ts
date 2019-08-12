@@ -1,0 +1,9 @@
+export const listLoadSSRData = 'listLoadSSRData';
+export const listWillStart = 'listWillStart';
+export const listWillLoadData = 'listWillLoadData';
+export const listLoadData = 'listLoadData';
+export const listDidLoadData = 'listDidLoadData';
+export const listDidStart = 'listDidStart';
+export const listShouldEnd = 'listShouldEnd';
+export const listDidEnd = 'listDidEnd';
+export const listDidCatch = 'listDidCatch';
