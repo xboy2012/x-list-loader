@@ -2,9 +2,12 @@
   "name": "x-list-loader",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "jsnext:main": "dist/es/index.js",
   "scripts": {
-    "build": "tsc --outDir temp/es"
+    "build": "tsc --outDir dist/es && cp -r src dist/ts && babel dist/es --out-dir dist/cjs",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -17,7 +20,16 @@
   },
   "homepage": "https://github.com/xboy2012/x-list-loader#readme",
   "devDependencies": {
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.5"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.4.2",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5"
   }
 }
