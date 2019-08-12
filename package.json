@@ -1,13 +1,18 @@
 {
   "name": "x-list-loader",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "A Framework to handle infinite list loading logic in React/Vue/raw javascript",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
+  "keywords": [
+    "list",
+    "loader"
+  ],
   "scripts": {
+    "clean": "rm -rf dist",
     "build": "tsc --outDir dist/es && cp -r src dist/ts && babel dist/es --out-dir dist/cjs",
-    "prepublish": "npm run build"
+    "prepublish": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
