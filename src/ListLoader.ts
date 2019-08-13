@@ -1,30 +1,27 @@
 import IListLoaderConfig from './interfaces/IListLoaderConfig';
 import IListLoader from './interfaces/IListLoader';
-import * as LifeCycles from './interfaces/LifeCyles';
 
 export default class ListLoader<T> implements IListLoader {
-  public static create<T>(config: IListLoaderConfig<T>, scope?: any) {
-    return new ListLoader(config, scope);
+  public static create<T>(config: IListLoaderConfig<T>) {
+    return new ListLoader(config);
   }
 
   private readonly _config: IListLoaderConfig<T>;
-  private readonly _scope: any;
   private _ssrData: T;
-  private _started: boolean = false;
-  private _loading: boolean = false;
-  private _ended: boolean = false;
+  private _started?: boolean;
+  private _loading?: boolean;
+  private _ended?: boolean;
+  private _ssrLoaded?: boolean;
 
-  private _ssrLoaded: boolean = false;
-
-  constructor(config: IListLoaderConfig<T>, scope?: any) {
+  constructor(config: IListLoaderConfig<T>) {
     this._config = config;
-    this._scope = scope || config;
   }
 
-  private invoke = (lifeCycle, ...args) => {
-    const fn = this._config[lifeCycle];
+  private invoke<T>(lifeCycle: keyof IListLoaderConfig<T>, ...args) {
+    const config = this._config;
+    const fn = config[lifeCycle];
     if (fn) {
-      return fn.call(this._scope, ...args, this);
+      return fn.call(config, ...args, this);
     }
   }
 
@@ -39,7 +36,7 @@ export default class ListLoader<T> implements IListLoader {
     // 处理首屏SSR数据预加载逻辑
     if (!this._ssrLoaded) {
       this._ssrLoaded = true;
-      this._ssrData = await invoke(LifeCycles.listLoadSSRData);
+      this._ssrData = await invoke('listLoadSSRData');
     }
 
     const ssrData = this._ssrData;
@@ -48,7 +45,7 @@ export default class ListLoader<T> implements IListLoader {
 
     if (isFirstLoad) {
       this._started = true;
-      await invoke(LifeCycles.listWillStart);
+      await invoke('listWillStart');
     }
     let error;
     let data;
@@ -59,31 +56,31 @@ export default class ListLoader<T> implements IListLoader {
       if (isFirstSSRLoad) {
         data = ssrData;
       } else {
-        await invoke(LifeCycles.listWillLoadData);
-        data = await invoke(LifeCycles.listLoadData);
+        await invoke('listWillLoadData');
+        data = await invoke('listLoadData');
       }
     } catch (e) {
       error = e;
     }
     this._loading = false;
     if (error) {
-      await invoke(LifeCycles.listDidCatch, error);
+      await invoke('listDidCatch', error);
       return;
     }
 
     if (!isFirstSSRLoad) {
-      await invoke(LifeCycles.listDidLoadData, data);
+      await invoke('listDidLoadData', data);
     }
 
     if (isFirstLoad) {
-      await invoke(LifeCycles.listDidStart, data);
+      await invoke('listDidStart', data);
     }
 
-    const isEnded = await invoke(LifeCycles.listShouldEnd, data);
+    const isEnded = await invoke('listShouldEnd', data);
 
     if (isEnded) {
       this._ended = true;
-      await invoke(LifeCycles.listDidEnd, data);
+      await invoke('listDidEnd', data);
     }
   }
 }
