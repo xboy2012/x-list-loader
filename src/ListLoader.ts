@@ -17,7 +17,7 @@ export default class ListLoader<T> implements IListLoader {
     this._config = config;
   }
 
-  private invoke<T>(lifeCycle: keyof IListLoaderConfig<T>, ...args) {
+  private invoke = <T>(lifeCycle: keyof IListLoaderConfig<T>, ...args) => {
     const config = this._config;
     const fn = config[lifeCycle];
     if (fn) {
